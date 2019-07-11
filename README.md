@@ -17,7 +17,7 @@
   
 - 通过PM2部署
   ```bash
-  $ pm2 start --name amsm-server -- --source localhost:30004
+  $ pm2 start main.js --name amsm-server -- --source localhost:30004
   ```
   `--name`参数指定服务别名。
   `--source`参数指定明文格式的报文数据所在地址。
