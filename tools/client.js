@@ -1,23 +1,33 @@
-const io = require('socket.io-client');
-
-// const flightSocket = io('http://localhost:20628', {
-//   path: '/flight'
-// });
-
-
-const flightSocket = io('http://localhost:20628', {
-  path: '/flight'
+const axios = require('axios');
+let dbquest = axios.create({
+  baseURL: 'http://localhost:20628'
 });
 
-flightSocket.on('connect', () => {
-  console.log('connected to ws:flight');
-});
+// query type range
+dbquest.post('/airwaypoints', {
+    type: 'range',
+    params: {
+      lon1: 1163500,
+      lat1: 400400,
+      lon2: 1163600,
+      lat2: 400500
+    }
+  })
+  .then(res => {
+    console.log(res.data)
+  })
 
-flightSocket.on('flight', (data) => {
-  console.log(data);
-  console.log('=====================')
-});
 
-flightSocket.on('error', (err) => {
-  console.log('err: ' + err);
-});
+
+// query type radius
+dbquest.post('/airwaypoints', {
+  type: 'radius',
+  params: {
+    lon: 1163548,
+    lat: 400418,
+    radius: 3000
+  }
+})
+.then(res => {
+  console.log(res.data)
+})

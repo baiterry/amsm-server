@@ -107,6 +107,7 @@ module.exports = class airwaydb {
   refreshIndex() {
     return new Promise((resolve, reject) => {
       this.findAll().then((res) => {
+        new KDBush(res, )
         let index = new KDBush(res, p => p.LONGITUDE, p => p.LATITUDE);
         this.index = index;
         resolve(index);
@@ -127,7 +128,12 @@ module.exports = class airwaydb {
         })
       }
       else{
-        resolve(this.index.range(lon1, lat1, lon2, lat2));
+        let index = this.index.range(lon1, lat1, lon2, lat2);
+        let results = [];
+        for (let i in index) {
+          results.push(this.points[index[i]]);
+        }
+        resolve(results);
       }
     }) 
   }
@@ -143,7 +149,12 @@ module.exports = class airwaydb {
         })
       }
       else{
-        resolve(this.index.within(lon, lat, radius));
+        let index = this.index.within(lon, lat, radius);
+        let results = [];
+        for (let i in index) {
+          results.push(this.points[index[i]]);
+        }
+        resolve(results);
       }
     }) 
   }

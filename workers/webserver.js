@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const async = require('async');
 const app = require('express')();
+const bodyParser = require('body-parser');
 const http = require('http').createServer(app);
 
 // websocket server
@@ -23,6 +24,9 @@ logger.info(`${process.pid} - 启动`);
 
 /*=============================== web服务器相关 ===============================*/
 
+app.use(bodyParser.json());
+
+// 航班飞行历史
 app.get('/history/:date/:flight', function (req, res) {
   let flight = req.params.flight;
   let date = req.params.date;
@@ -37,12 +41,54 @@ app.get('/history/:date/:flight', function (req, res) {
   });
 });
 
+// 航路点
 app.get('/airwaypoints', function (req, res) {
+  console.log('/airwaypoints')
   logger.info(`收到航路点数据请求: from ${req.ip}`);
   apdb.findAll().then(points => {
     res.json(points);
   });
 });
+
+app.post('/airwaypoints', async function(req, res) {
+  let _res = {
+    info: '',
+    points: []
+  };
+  let params = req.body.params;
+  if (req.body.type === 'range') {
+    if (
+      typeof params.lon1 === 'number' 
+      && typeof params.lat1 === 'number' 
+      && typeof params.lon2 ==='number' 
+      && typeof params.lat2 ==='number'
+    ) {
+      _res.points = await apdb.search_range(params.lon1, params.lat1, params.lon2, params.lat2);
+      _res.info = 'success';
+    }
+    else {
+      _res.info = 'range query params error!'
+    }
+  }
+  else if (req.body.type === 'radius') {
+    if (
+      typeof params.lon === 'number' 
+      && typeof params.lat === 'number' 
+      && typeof params.radius ==='number' 
+    ) {
+      _res.points = await apdb.search_radius(params.lon, params.lat, params.radius);
+      _res.info = 'success';
+    }
+    else {
+      _res.info = 'range query params error!'
+    }
+  }
+  else {
+    _res.info = 'query type error!';
+  }
+  res.json(_res);
+});
+
 
 // websocket server
 io.on('connection', (socket) => {

@@ -5,6 +5,30 @@
 - ws /flight 实时飞行数据
 - GET /history/[date]/[flight] 指定日期/航班号的飞行历史
 - GET /airwaypoints 航路点数据
+- POST /airwaypoints {type, params} 航路点搜索
+  - 矩形范围搜索
+  ```javascript
+  {
+    type: 'range',
+    params: {
+      lon1: 1163500,
+      lat1: 400400,
+      lon2: 1163600,
+      lat2: 400500
+    }
+  }
+  ```
+  - 圆形范围搜索
+  ```javascript
+  {
+    type: 'radius',
+    params: {
+      lon: 1163548,
+      lat: 400418,
+      radius: 3000
+    }
+  }
+  ```
 
 ## 部署
 - 数据库文件
