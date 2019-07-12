@@ -12,6 +12,7 @@ module.exports = class aptree {
    */
   constructor(points) {
     this.tree = new KDBush(points, p => p.LONGITUDE, p => p.LATITUDE);
+    this.points = points;
   }
 
   /**
