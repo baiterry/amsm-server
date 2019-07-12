@@ -107,7 +107,6 @@ module.exports = class airwaydb {
   refreshIndex() {
     return new Promise((resolve, reject) => {
       this.findAll().then((res) => {
-        new KDBush(res, )
         let index = new KDBush(res, p => p.LONGITUDE, p => p.LATITUDE);
         this.index = index;
         resolve(index);

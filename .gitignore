@@ -7,6 +7,12 @@ yarn-error.log*
 # data
 *.dat
 
+# todo
+todo.md
+
+# db
+airwaypoints.db
+
 # Runtime data
 pids
 *.pid
